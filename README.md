@@ -1,2 +1,2 @@
 # RM
-cdm
+cdma
