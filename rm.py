@@ -41,23 +41,29 @@ def pseudo_generator(lenArray):
 if __name__ == "__main__":
     bits = bitarray.bitarray()
     message = "ola"
-    bitArray = text_to_bits(message)                    # Mensagem para bits
-    fs = 2                                              # Frequência de amostragem
+    bitArray = text_to_bits(message)                            # Mensagem para bits
+    fs = 2                                                      # Frequência de amostragem
     #print(len(bitArray))
     #print('-----Array mensagem------')
-    bitArray = fun_menos1(bitArray)                     # Transformar os zeros em menos 1
+    bitArray = fun_menos1(bitArray)                             # Transformar os zeros em menos 1
     #print(bitArray)
     #print('-----Array com fs = 5-------')
-    bitArrayf = fun_fs(bitArray, fs)                    # Multiplicar pela frequência de amostragem
+    bitArrayf = fun_fs(bitArray, fs)                            # Multiplicar pela frequência de amostragem
     #print(bitArrayf)
     #print('-----Array psd----')
-    psd_array = pseudo_generator(len(bitArrayf)+fs)     # Gerar o pseudo noise
+    psd_array = pseudo_generator(len(bitArrayf)+fs)             # Gerar o pseudo noise
     #print(psd_array)
     #print('-----Array psd com fs = 2------')
-    fsp = 2                                             # Frequência do pseudo noise
-    psd_array_fs = fun_fs(psd_array,fsp)                # Multiplicar o pseudo pela Fs
+    fsp = 2                                                     # Frequência do pseudo noise
+    psd_array_fs = fun_fs(psd_array,fsp)                        # Multiplicar o pseudo pela Fs
     #print(psd_array_fs)
     
-    bit = np.array(bitArrayf)                           # Array de bits para gerar o gráfico             
-    plt.step(np.arange(0,len(bit)),bit)                 # Plot do gráfico
+    graph_mens = np.array(bitArray)                             # Array de bits para gerar o gráfico mensagem sem Fs      
+    graph_mensFs = np.array(bitArrayf)                          # Array de bits para gerar o gráfico mensagem com Fs     
+    graph_pseudo = np.array(psd_array)                          # Array de bits para gerar o gráfico do pseudo noise
+    graph_pseudoFs = np.array(psd_array_fs)                     # Array de bits para gerar o gráfico do pseudo com Fs       
+    plt.step(np.arange(0,len(graph_mens)),graph_mens)           # Plot do gráfico mensagem
+    plt.step(np.arange(0,len(graph_mensFs)),graph_mensFs)       # Plot do gráfico
+    plt.step(np.arange(0,len(graph_pseudo)),graph_pseudo)       # Plot do gráfico
+    plt.step(np.arange(0,len(graph_pseudoFs)),graph_pseudoFs)   # Plot do gráfico
     
