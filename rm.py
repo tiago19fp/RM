@@ -73,16 +73,31 @@ if __name__ == "__main__":
 
     sinal_transmitido = mult_array(bitArrayf, psd_array_fs)
 
+    with open('output.txt', 'w') as filehandle:
+        for listitem in sinal_transmitido:
+            filehandle.write('%s,' % listitem) 
+        filehandle.write('\n')
+        for listitem in bitArray:
+            filehandle.write('%s,' % listitem) 
+        filehandle.write('\n')
+        for listitem in psd_array_fs:
+            filehandle.write('%s,' % listitem)   
+        filehandle.write('\n')
+        filehandle.write(str(fs/fsp))
+        
+
+
     print(sinal_transmitido)
-    
+    print(len(sinal_transmitido))
     graph_mens = np.array(bitArray)                             # Array de bits para gerar o gráfico mensagem sem Fs      
     graph_mensFs = np.array(bitArrayf)                          # Array de bits para gerar o gráfico mensagem com Fs     
     graph_pseudo = np.array(psd_array)                          # Array de bits para gerar o gráfico do pseudo noise
     graph_pseudoFs = np.array(psd_array_fs)                     # Array de bits para gerar o gráfico do pseudo com Fs  
     
     plt.step(np.arange(0,len(graph_mens)),graph_mens)           # Plot do gráfico mensagem
-    #plt.step(np.arange(0,len(graph_mensFs)),graph_mensFs)       # Plot do gráfico mensagem com Fs
+    plt.step(np.arange(0,len(graph_mensFs)),graph_mensFs)       # Plot do gráfico mensagem com Fs
     plt.step(np.arange(0,len(graph_pseudo)),graph_pseudo)       # Plot do gráfico pseudo 
     plt.step(np.arange(0,len(graph_pseudoFs)),graph_pseudoFs)   # Plot do gráfico pseudo com Fs
+    plt.legend()
     plt.show()
     
