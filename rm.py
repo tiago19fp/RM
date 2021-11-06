@@ -1,11 +1,26 @@
 import numpy as np
-import matplotlib.pyplot as plt
+import pylab as plt
 import bitarray
 import random
+import sys
 
 def text_to_bits(text):
     bits = bin(int.from_bytes(text.encode(), 'big'))[2:]
     return list(map(int, bits.zfill(8 * ((len(bits) + 7) // 8))))
+
+def fun_fs(array, fs):
+    bitArrayFs = [0]*fs*len(array)
+    y = 0
+    k = 0
+    c = 0
+    while y < len(bitArrayFs):
+        while k < fs:
+            bitArrayFs[y+k] = array[c]
+            k = k+1
+        y = y + fs
+        k = 0
+        c = c + 1
+    return bitArrayFs
 
 def fun_menos1(array):
     x = 0
@@ -23,44 +38,46 @@ def pseudo_generator(lenArray):
        x = x + 1
    return fun_menos1(array)
 
-def mult_array(array1, array2):
-    x = 0
-    arraym = [0]*len(array1)
-    while x < len(array1):
-        arraym[x] = array1[x]*array2[x]
-        x = x + 1 
-    return arraym
+def mult_array(bitAr, chip, fe):
 
-def my_lines(ax, pos, *args, **kwargs):
-    if ax == 'x':
-        for p in pos:
-            plt.axvline(p, *args, **kwargs)
-    else:
-        for p in pos:
-            plt.axhline(p, *args, **kwargs)
+    arraym = [0]*len(bitAr)*fe
+    x = 0
+    y = 0
+    k = 0
+    l = 0
+    while x < len(bitAr):
+        while y < fe:
+            if(y + l > len(chip)):
+                l = 0
+            arraym[k] = bitAr[x] * chip[y + l]
+            y = y + 1
+            k = k + 1
+        l = y
+        y = 0
+        x = x + 1
+    return arraym
 
 if __name__ == "__main__":
     bits = bitarray.bitarray()
-    message = "ola"
+    message = sys.argv[1]
     bitArray = text_to_bits(message)                            # Mensagem para bits
-    fs = 4                                                      # Frequência de amostragem
-    #print(len(bitArray))
-    #print('-----Array mensagem------')
+    fe = int(sys.argv[2])                                                      # Frequência de amostragem
     bitArray = fun_menos1(bitArray)                             # Transformar os zeros em menos 1
-    #print(bitArray)
-    #print(bitArray)
-    #print('-----Array com fs = 5-------')
-    bitArrayf = np.repeat(bitArray, fs)
-    t = 0.5 * np.arange(len(bitArrayf))
-    #print(bitArrayf)
-    #print(bitArrayf)
-    #print('-----Array psd----')
-    fsp = 2  
-    psd_array = pseudo_generator(int(len(bitArrayf)/fsp))          # Gerar o pseudo noise
-    #print(psd_array)
-    #print('-----Array psd com fs = 2------')                      # Frequência do pseudo noise
-    psd_array_fs = np.repeat(psd_array, fs)                        # Multiplicar o pseudo pela Fs
-    sinal_transmitido = mult_array(bitArrayf, psd_array_fs)
+
+    fa = int(sys.argv[3]) 
+    psd_array = pseudo_generator(random.randint(1,10))                # Gerar o pseudo noise
+
+    psd_array_fa = fun_fs(psd_array,fa)                        # Multiplicar o pseudo pela Fs
+
+    print(len(bitArray))    
+    print(len(psd_array))     
+    print(len(psd_array_fa)) 
+
+    sinal_transmitido = mult_array(bitArray, psd_array_fa, fe)
+    
+    print(bitArray)
+    print(psd_array_fa)
+    print(sinal_transmitido)
 
     with open('output.txt', 'w') as filehandle:
         for listitem in sinal_transmitido:
@@ -69,30 +86,18 @@ if __name__ == "__main__":
         for listitem in bitArray:
             filehandle.write('%s,' % listitem) 
         filehandle.write('\n')
-        for listitem in psd_array_fs:
+        for listitem in psd_array_fa:
             filehandle.write('%s,' % listitem)   
         filehandle.write('\n')
-        filehandle.write(str(fs/fsp))
-        
+        filehandle.write(str(fe))
 
-    graph_mens = np.array(bitArray)                     # Array de bits para gerar o gráfico mensagem sem Fs      
-    graph_mensFs = np.array(bitArrayf)                          # Array de bits para gerar o gráfico mensagem com Fs     
+    graph_mens = np.array(bitArray)                             # Array de bits para gerar o gráfico mensagem sem Fs      
     graph_pseudo = np.array(psd_array)                          # Array de bits para gerar o gráfico do pseudo noise
-    graph_pseudoFs = np.array(psd_array_fs)                     # Array de bits para gerar o gráfico do pseudo com Fs  
+    graph_pseudoFs = np.array(psd_array_fa)                     # Array de bits para gerar o gráfico do pseudo com Fs  
 
-    print(graph_mens)
-    print(graph_pseudo)
-    
-    #my_lines('x', range(10), color='.5', linewidth=2)
-    #my_lines('y', [0.5, 2, 4], color='.5', linewidth=2)
-
-    #plt.step(t, graph_mens + 0, 'r', linewidth = 2, where='post')
-    #plt.step(t, graph_mensFs + 2, 'r', linewidth = 2, where='post')
-    #plt.ylim([-1,6])
-
-    for tbit, bit in enumerate(bitArray):
-        plt.text(tbit + 0.5, 1.5, str(bit))
-
-    #plt.gca().axis('off')
-    #plt.show()
-    
+    plt.step(np.arange(0,len(graph_mens)),graph_mens)           # Plot do gráfico mensagem
+    #plt.step(np.arange(0,len(graph_mensFs)),graph_mensFs)       # Plot do gráfico mensagem com Fs
+    plt.step(np.arange(0,len(graph_pseudo)),graph_pseudo)       # Plot do gráfico pseudo 
+    plt.step(np.arange(0,len(graph_pseudoFs)),graph_pseudoFs)   # Plot do gráfico pseudo com Fs
+    plt.legend()
+    plt.show()
