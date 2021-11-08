@@ -1,0 +1,3 @@
+firstSignal.txt,secondSignal.txt
+output.txt
+1

@@ -79,7 +79,7 @@ if __name__ == "__main__":
     print(psd_array_fa)
     print(sinal_transmitido)
 
-    with open('output.txt', 'w') as filehandle:
+    with open('firstSignal.txt', 'w') as filehandle:
         for listitem in sinal_transmitido:
             filehandle.write('%s,' % listitem) 
         filehandle.write('\n')
