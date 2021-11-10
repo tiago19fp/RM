@@ -36,10 +36,9 @@ def pseudo_generator(lenArray):
    while x < lenArray: 
        array[x]=random.randint(0, 1) 
        x = x + 1
-   return fun_menos1(array)
+   return array
 
 def mult_array(bitAr, chip, fe):
-
     arraym = [0]*len(bitAr)*fe
     x = 0
     y = 0
@@ -68,7 +67,9 @@ if __name__ == "__main__":
     psd_array = pseudo_generator(random.randint(1,10))                # Gerar o pseudo noise
     print(psd_array)
     psd_array_fa = fun_fs(psd_array,fa)                        # Multiplicar o pseudo pela Fs
-
+    psd_array_save_file = fun_fs(psd_array,fa)
+    print(psd_array_save_file)
+    psd_array_fa = fun_menos1(psd_array_fa)
     toOpen = sys.argv[4]
 
     #print(len(bitArray))    
@@ -82,15 +83,28 @@ if __name__ == "__main__":
     #print(sinal_transmitido)
 
     with open(toOpen, 'w') as filehandle:
+        x = 1
         for listitem in cdma:
-            filehandle.write('%s,' % listitem) 
+            filehandle.write('%s,' % listitem)
+            if(len(cdma) == x):
+                filehandle.write('%s' % listitem) 
+            x = x + 1 
         filehandle.write('\n')
+        x=1 
         for listitem in bitArray:
             filehandle.write('%s,' % listitem) 
+            if(len(bitArray) == x):
+                filehandle.write('%s' % listitem) 
+            x = x + 1
         filehandle.write('\n')
-        for listitem in psd_array_fa:
-            filehandle.write('%s,' % listitem)   
+        x=1
+        for listitem in psd_array_save_file:
+            filehandle.write('%s,' % listitem)
+            if(len(psd_array_save_file) == x):
+                filehandle.write('%s' % listitem) 
+            x = x + 1
         filehandle.write('\n')
+        x=1   
         filehandle.write(str(fe))
 
     graph_mens = np.array(bitArray)                             # Array de bits para gerar o gráfico mensagem sem Fs      
