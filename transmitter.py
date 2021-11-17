@@ -30,6 +30,14 @@ def fun_menos1(array):
         x = x +1
     return array
 
+def retirar_menos1(array):
+    x = 0
+    while x < len(array):
+        if(array[x] == -1):
+            array[x] = 0
+        x = x +1
+    return array
+
 def pseudo_generator_message(lenArray):
    array = [0]*lenArray
    x = 0
@@ -57,10 +65,8 @@ def mult_array(bitAr, chip, fe):
     return arraym
 
 if __name__ == "__main__":
-    bits = bitarray.bitarray()
-    message = pseudo_generator_message(100) 
-    bitArray = text_to_bits(message)                            # Mensagem para bits
-    bitArraymenos1 = text_to_bits(message) 
+    bitArray = pseudo_generator_message(100) 
+    bitArraymenos1 = bitArray
     fe = int(sys.argv[1])                                                      # Frequência de amostragem
     bitArraymenos1 = fun_menos1(bitArraymenos1)                             # Transformar os zeros em menos 1
     fa = int(sys.argv[2]) 
@@ -80,7 +86,9 @@ if __name__ == "__main__":
     
     #print(bitArray)
     #print(psd_array_fa)
-    #print(sinal_transmitido)
+    print(len(cdma))
+
+    bitArrayFile = retirar_menos1(bitArraymenos1)
 
     with open(toOpen, 'w') as filehandle:
         x = 1
@@ -91,9 +99,9 @@ if __name__ == "__main__":
             x = x + 1 
         filehandle.write('\n')
         x=1 
-        for listitem in bitArray:
+        for listitem in bitArrayFile:
             filehandle.write('%s,' % listitem) 
-            if(len(bitArray) == x):
+            if(len(bitArrayFile) == x):
                 filehandle.write('%s' % listitem) 
             x = x + 1
         filehandle.write('\n')
