@@ -30,7 +30,7 @@ def fun_menos1(array):
         x = x +1
     return array
 
-def pseudo_generator(lenArray):
+def pseudo_generator_message(lenArray):
    array = [0]*lenArray
    x = 0
    while x < lenArray: 
@@ -58,19 +58,19 @@ def mult_array(bitAr, chip, fe):
 
 if __name__ == "__main__":
     bits = bitarray.bitarray()
-    message = sys.argv[1]
+    message = pseudo_generator_message(100) 
     bitArray = text_to_bits(message)                            # Mensagem para bits
     bitArraymenos1 = text_to_bits(message) 
-    fe = int(sys.argv[2])                                                      # Frequência de amostragem
+    fe = int(sys.argv[1])                                                      # Frequência de amostragem
     bitArraymenos1 = fun_menos1(bitArraymenos1)                             # Transformar os zeros em menos 1
-    fa = int(sys.argv[3]) 
-    psd_array = pseudo_generator(random.randint(1,10))                # Gerar o pseudo noise
+    fa = int(sys.argv[2]) 
+    psd_array = pseudo_generator_message(random.randint(1,10))                # Gerar o pseudo noise
     print(psd_array)
     psd_array_fa = fun_fs(psd_array,fa)                        # Multiplicar o pseudo pela Fs
     psd_array_save_file = fun_fs(psd_array,fa)
     print(psd_array_save_file)
     psd_array_fa = fun_menos1(psd_array_fa)
-    toOpen = sys.argv[4]
+    toOpen = sys.argv[3]
 
     #print(len(bitArray))    
     #print(len(psd_array))     
