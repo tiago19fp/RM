@@ -89,27 +89,30 @@ if __name__ == "__main__":
     print(len(cdma))
 
     bitArrayFile = retirar_menos1(bitArraymenos1)
-
+    print(cdma)
     with open(toOpen, 'w') as filehandle:
         x = 1
         for listitem in cdma:
-            filehandle.write('%s,' % listitem)
             if(len(cdma) == x):
                 filehandle.write('%s' % listitem) 
+                break
+            filehandle.write('%s,' % listitem)
             x = x + 1 
         filehandle.write('\n')
         x=1 
         for listitem in bitArrayFile:
-            filehandle.write('%s,' % listitem) 
             if(len(bitArrayFile) == x):
                 filehandle.write('%s' % listitem) 
+                break
+            filehandle.write('%s,' % listitem) 
             x = x + 1
         filehandle.write('\n')
         x=1
         for listitem in psd_array_save_file:
-            filehandle.write('%s,' % listitem)
             if(len(psd_array_save_file) == x):
-                filehandle.write('%s' % listitem) 
+                filehandle.write('%s' % listitem)
+                break 
+            filehandle.write('%s,' % listitem)
             x = x + 1
         filehandle.write('\n')
         x=1   
@@ -120,7 +123,7 @@ if __name__ == "__main__":
     graph_pseudoFs = np.array(psd_array_fa)                     # Array de bits para gerar o gráfico do pseudo com Fs  
 
     plt.step(np.arange(0,len(graph_mens)),graph_mens)           # Plot do gráfico mensagem
-    #plt.step(np.arange(0,len(graph_mensFs)),graph_mensFs)       # Plot do gráfico mensagem com Fs
+    #plt.step(np.arange(0,len(graph_mensFs)),graph_mensFs)      # Plot do gráfico mensagem com Fs
     plt.step(np.arange(0,len(graph_pseudo)),graph_pseudo)       # Plot do gráfico pseudo 
     plt.step(np.arange(0,len(graph_pseudoFs)),graph_pseudoFs)   # Plot do gráfico pseudo com Fs
     plt.legend()

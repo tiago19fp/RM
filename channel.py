@@ -1,3 +1,4 @@
+from typing import final
 import numpy as np
 import random
 
@@ -14,20 +15,20 @@ def fun_menos1(array):
     return array
 
 def getAttributes(ficheiro):
-    lines = ficheiro.readlines() 
+    lines = ficheiro.readlines()
     count = 0
     for line in lines:
         count += 1
         if(count % 4 == 1):   # 1st line  (sinal)
             cdma = lines[count-1].strip().split(',')
-            cdma = cdma[:-1]
+        if(count % 4 == 2):   # 1st line  (sinal)
+            message = lines[count-1].strip().split(',')
         if(count % 4 == 3):   # 3rd line  (chip)
             chip = lines[count-1].strip().split(',')
-            chip = chip[:-1]
         if(count % 4 == 0):   # 4th line  (fe)
             fe = lines[count-1]
 
-    return cdma,chip,fe
+    return cdma,message,chip,fe
 
 if __name__ == "__main__":
 
@@ -54,29 +55,53 @@ if __name__ == "__main__":
 
     stream = open(output,"w")
     finalSignal = [0] * 100
+    sinaisSomados = [0] * 200
 
     for i in ficheiros:                                                     
         with open(ficheiros[nFile], "r") as filestream:                     # OPEN FILES FROM CONFIG FILE
-            cdma,chip,fe = getAttributes(filestream)
-            noise = np.random.normal(0, desvio, len(cdma))
-            arrayAtenuado = [0] * len(cdma)
+            cdma,message,chip,fe = getAttributes(filestream)
+            sinalAtenuado = [0] * len(cdma)
             counter = 0
             for x in cdma:
-                arrayAtenuado[counter] = float(f_atenuacao[nFile]) * float(cdma[counter])
+                sinalAtenuado[counter] = float(f_atenuacao[nFile]) * float(cdma[counter])
                 counter += 1
-            finalSignal = finalSignal + arrayAtenuado
-            # signal = arrayAtenuado + noise
+            x = 0
+            while x < 200:
+                sinaisSomados[x] = sinalAtenuado[x] + sinaisSomados[x]
+                x += 1
         nFile += 1
-        
-    finalSignal = finalSignal + noise
-    print(finalSignal)
+    noise = np.random.normal(0, desvio, len(cdma))
+    #print(sinalAtenuado)
+    finalSignal = sinaisSomados + noise
+    x = 1
+    for listitem in finalSignal:
+        stream.write('%s,' % listitem)
+        if(len(finalSignal) == x):
+            stream.write('%s' % listitem) 
+        x = x + 1 
+    stream.write('\n')
 
-
-    # for listitem in signal:
-    #             stream.write('%s,' % listitem) 
-    #         stream.write('\n')
-    #         for listitem in chip:
-    #             stream.write('%s,' % listitem)   
-    #         stream.write('\n')
-    #         stream.write(str(fe))
-    #         stream.write('\n')
+    nFile = 0
+    for i in ficheiros:                                                     
+        with open(ficheiros[nFile],"r") as filestream:
+            cdma,message,chip,fe = getAttributes(filestream)
+            x = 1
+            for listitem in message:
+                if(len(message) == x):
+                    stream.write('%s' % listitem)
+                    break
+                stream.write('%s,' % listitem) 
+                x = x + 1 
+            stream.write('\n')
+            x = 1
+            for listitem in chip:
+                if(len(chip) == x):
+                    stream.write('%s' % listitem) 
+                    break
+                stream.write('%s,' % listitem)
+                x = x + 1 
+            x = 1
+            stream.write('\n')
+            stream.write(str(fe))
+            stream.write('\n')
+        nFile += 1
