@@ -71,8 +71,10 @@ if __name__ == "__main__":
     bitArraymenos1 = fun_menos1(bitArraymenos1)                             # Transformar os zeros em menos 1
     fa = int(sys.argv[2]) 
     psd_array = pseudo_generator_message(random.randint(1,10))                # Gerar o pseudo noise
+    #print(psd_array)
+    psd_array_fa = fun_fs(psd_array,fa)                        # Multiplicar o pseudo pela Fs4
     print(psd_array)
-    psd_array_fa = fun_fs(psd_array,fa)                        # Multiplicar o pseudo pela Fs
+    print(psd_array_fa)
     psd_array_save_file = fun_fs(psd_array,fa)
     print(psd_array_save_file)
     psd_array_fa = fun_menos1(psd_array_fa)
@@ -122,9 +124,9 @@ if __name__ == "__main__":
     graph_pseudo = np.array(psd_array)                          # Array de bits para gerar o gráfico do pseudo noise
     graph_pseudoFs = np.array(psd_array_fa)                     # Array de bits para gerar o gráfico do pseudo com Fs  
 
-    plt.step(np.arange(0,len(graph_mens)),graph_mens)           # Plot do gráfico mensagem
-    #plt.step(np.arange(0,len(graph_mensFs)),graph_mensFs)      # Plot do gráfico mensagem com Fs
-    plt.step(np.arange(0,len(graph_pseudo)),graph_pseudo)       # Plot do gráfico pseudo 
-    plt.step(np.arange(0,len(graph_pseudoFs)),graph_pseudoFs)   # Plot do gráfico pseudo com Fs
-    plt.legend()
-    plt.show()
+    # plt.step(np.arange(0,len(graph_mens)),graph_mens)           # Plot do gráfico mensagem
+    # #plt.step(np.arange(0,len(graph_mensFs)),graph_mensFs)      # Plot do gráfico mensagem com Fs
+    # plt.step(np.arange(0,len(graph_pseudo)),graph_pseudo)       # Plot do gráfico pseudo 
+    # plt.step(np.arange(0,len(graph_pseudoFs)),graph_pseudoFs)   # Plot do gráfico pseudo com Fs
+    # plt.legend()
+    # plt.show()

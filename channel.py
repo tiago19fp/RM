@@ -56,7 +56,6 @@ if __name__ == "__main__":
     stream = open(output,"w")
     finalSignal = [0] * 100
     sinaisSomados = [0] * 200
-
     for i in ficheiros:                                                     
         with open(ficheiros[nFile], "r") as filestream:                     # OPEN FILES FROM CONFIG FILE
             cdma,message,chip,fe = getAttributes(filestream)
@@ -75,9 +74,10 @@ if __name__ == "__main__":
     finalSignal = sinaisSomados + noise
     x = 1
     for listitem in finalSignal:
-        stream.write('%s,' % listitem)
         if(len(finalSignal) == x):
             stream.write('%s' % listitem) 
+            break
+        stream.write('%s,' % listitem)
         x = x + 1 
     stream.write('\n')
 
