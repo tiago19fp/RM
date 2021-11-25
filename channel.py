@@ -38,36 +38,44 @@ if __name__ == "__main__":
     output = ''
     nFile = 0
     desvio = 0
+    size = 0
     noise = ''
 
     with open(configFile, "r") as filestream:                         # OPEN CONFIG FILE
         counter = 0
         for line in filestream:
             counter += 1
-            if(counter % 4 == 1):   # 1st line
+            if(counter % 5 == 1):   # 1st line
                 ficheiros = line.strip().split(",")
-            if(counter % 4 == 2):   # 2nd line
+            if(counter % 5 == 2):   # 2nd line
                 f_atenuacao = line.strip().split(",")
-            if(counter % 4 == 3):   # 3rd line
+            if(counter % 5 == 3):   # 3rd line
                 output = line.strip()
-            if(counter % 4 == 0):   # 4th line
+            if(counter % 5 == 4):   # 4th line
                 desvio = int(line.strip())
+            if(counter % 5 == 0):   # 4th line
+                size = int(line.strip())
 
     stream = open(output,"w")
     finalSignal = [0] * 100
-    sinaisSomados = [0] * 200
+    sinaisSomados = [0] * size
+    count = 0
+    #sinalAtenuadoFinal = []
     for i in ficheiros:                                                     
         with open(ficheiros[nFile], "r") as filestream:                     # OPEN FILES FROM CONFIG FILE
             cdma,message,chip,fe = getAttributes(filestream)
             sinalAtenuado = [0] * len(cdma)
+            print(len(cdma))
             counter = 0
             for x in cdma:
                 sinalAtenuado[counter] = float(f_atenuacao[nFile]) * float(cdma[counter])
                 counter += 1
+            #sinalAtenuadoFinal.append(sinalAtenuado)
             x = 0
-            while x < 200:
+            while x < len(cdma):
                 sinaisSomados[x] = sinalAtenuado[x] + sinaisSomados[x]
                 x += 1
+            print(sinalAtenuado)
         nFile += 1
     noise = np.random.normal(0, desvio, len(cdma))
     #print(sinalAtenuado)

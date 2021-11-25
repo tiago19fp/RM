@@ -65,7 +65,7 @@ def mult_array(bitAr, chip, fe):
     return arraym
 
 if __name__ == "__main__":
-    bitArray = pseudo_generator_message(100) 
+    bitArray = pseudo_generator_message(20) 
     bitArraymenos1 = bitArray
     fe = int(sys.argv[1])                                                      # Frequência de amostragem
     bitArraymenos1 = fun_menos1(bitArraymenos1)                             # Transformar os zeros em menos 1

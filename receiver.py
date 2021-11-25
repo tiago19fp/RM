@@ -1,4 +1,5 @@
-from typing import Counter
+from os import set_inheritable
+from typing import Counter, final
 import numpy as np
 import pylab as plt
 
@@ -10,22 +11,24 @@ def fun_menos1(array):
         x = x +1
     return array
 
+def fun_zeros(array):
+    x = 0
+    while x < len(array):
+        if(array[x] == -1):
+            array[x] = 0
+        x = x +1
+    return array
+
 def mult_array(arr, chip):
     arraym = [0]*len(arr)
     x = 0
     y = 0
-    k = 0
-    l = 0
     while x < len(arr):
-        while y < 1:
-            if(y + l > len(chip)):
-                l = 0
-            arraym[k] = arr[x] * chip[y + l]
-            y = y + 1
-            k = k + 1
-        l = y
-        y = 0
-        x = x + 1
+        if(y==len(chip)):
+            y = 0
+        arraym[x]= float(arr[x]) * float(chip[y])
+        x += 1
+        y += 1
     return arraym
 
 if __name__ == "__main__":
@@ -60,27 +63,28 @@ if __name__ == "__main__":
                     fe.append(int(lines[count-1].strip()))
 
     soma = 0
-    count = 0
-    fim = len(sinal)
-    finalArray = []
-    for n in sinal:
-        if(count == fim):
-            break
-        soma = float(sinal[count]) + float(sinal[count + 1])
-        if(soma > 0):
-            finalArray.append(1)
-        else:
-            finalArray.append(0)
-        count += 2
-        soma = 0
-    arrayMinus1 = fun_menos1(finalArray)
-    
-    multChip = []
+
     x = 0
+    multChip = []
     while(x < len(chip)):
         integer_map = map(int, chip[x])
         integer_list = list(integer_map)
         chipMinus1 = fun_menos1(integer_list)
-        multChip.append(mult_array(arrayMinus1,chipMinus1))
+        multChip.append(mult_array(sinal,chipMinus1))
+        #print(multChip)
         x += 1
-    print(multChip)
+
+    array = multChip[0]
+    finalArray = []
+    count = 0
+    fim = len(array)
+    for n in array:
+        if(count == fim):
+            break
+        soma = float(array[count]) + float(array[count + 1]) + float(array[count + 2])
+        if(soma > 0):
+            finalArray.append(1)
+        else:
+            finalArray.append(0)
+        count += 3
+        soma = 0

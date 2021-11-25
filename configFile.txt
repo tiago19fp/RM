@@ -2,3 +2,4 @@ firstSignal.txt,secondSignal.txt
 0.8,1.2
 channel.txt
 1
+60
