@@ -23,12 +23,27 @@ def mult_array(arr, chip):
     arraym = [0]*len(arr)
     x = 0
     y = 0
+    k = 0
+    tam = 0
+    #print(chip)
     while x < len(arr):
-        if(y==len(chip)):
-            y = 0
-        arraym[x]= float(arr[x]) * float(chip[y])
-        x += 1
-        y += 1
+        #print("Mensagem: "+str(bitAr[x]))
+        while y < 1:
+            if(tam == len(chip)):
+                tam = 0
+            #print(tam + y)
+            arraym[k] = float(arr[x]) * float(chip[tam + y])
+            #print("Chip: "+str(chip[tam + y]))
+            #print("Sinal: "+str(arraym[k]))
+            y = y + 1
+            k = k + 1
+        tam = tam + 1
+        #print("-----------")
+        #print(tam)
+        #print(len(chip))
+        #print("-----------")
+        y = 0
+        x = x + 1
     return arraym
 
 if __name__ == "__main__":
@@ -81,10 +96,24 @@ if __name__ == "__main__":
     for n in array:
         if(count == fim):
             break
-        soma = float(array[count]) + float(array[count + 1]) + float(array[count + 2])
+        soma = float(array[count]) + float(array[count + 1]) + float(array[count + 2])+float(array[count+3]) + float(array[count + 4]) + float(array[count + 5])+float(array[count+6]) + float(array[count + 7]) + float(array[count + 8])+float(array[count+9]) + float(array[count + 10]) + float(array[count + 11])+float(array[count+12]) + float(array[count + 13]) + float(array[count + 14])+float(array[count+15])
+
         if(soma > 0):
             finalArray.append(1)
         else:
             finalArray.append(0)
-        count += 3
+        count += 16
         soma = 0
+
+    t = 0
+    erros = 0
+    mess = message[0]
+
+    while t < len(finalArray):
+        #print(str(finalArray[t])+"|"+str(mess[t]))
+        if(str(finalArray[t])!=str(mess[t])):
+            erros += 1
+        t = t + 1
+
+    print(erros)
+    

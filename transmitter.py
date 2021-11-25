@@ -52,20 +52,30 @@ def mult_array(bitAr, chip, fe):
     y = 0
     k = 0
     l = 0
+    tam = 0
+    print(chip)
     while x < len(bitAr):
+        #print("Mensagem: "+str(bitAr[x]))
         while y < fe:
-            if(y + l > len(chip)):
-                l = 0
-            arraym[k] = bitAr[x] * chip[y + l]
+            if(tam == len(chip)):
+                tam = 0
+            #print(tam + y)
+            arraym[k] = bitAr[x] * chip[tam + y]
+            #print("Chip: "+str(chip[tam + y]))
+            #print("Sinal: "+str(arraym[k]))
             y = y + 1
             k = k + 1
-        l = y
+        tam = tam + fe
+        #print("-----------")
+        #print(tam)
+        #print(len(chip))
+        #print("-----------")
         y = 0
         x = x + 1
     return arraym
 
 if __name__ == "__main__":
-    bitArray = pseudo_generator_message(20) 
+    bitArray = pseudo_generator_message(1000000) 
     bitArraymenos1 = bitArray
     fe = int(sys.argv[1])                                                      # Frequência de amostragem
     bitArraymenos1 = fun_menos1(bitArraymenos1)                             # Transformar os zeros em menos 1
@@ -73,10 +83,10 @@ if __name__ == "__main__":
     psd_array = pseudo_generator_message(random.randint(1,10))                # Gerar o pseudo noise
     #print(psd_array)
     psd_array_fa = fun_fs(psd_array,fa)                        # Multiplicar o pseudo pela Fs4
-    print(psd_array)
-    print(psd_array_fa)
+    #print(psd_array)
+    #print(psd_array_fa)
     psd_array_save_file = fun_fs(psd_array,fa)
-    print(psd_array_save_file)
+    #print(psd_array_save_file)
     psd_array_fa = fun_menos1(psd_array_fa)
     toOpen = sys.argv[3]
 
@@ -88,10 +98,10 @@ if __name__ == "__main__":
     
     #print(bitArray)
     #print(psd_array_fa)
-    print(len(cdma))
+    #print(len(cdma))
 
     bitArrayFile = retirar_menos1(bitArraymenos1)
-    print(cdma)
+    #print(cdma)
     with open(toOpen, 'w') as filehandle:
         x = 1
         for listitem in cdma:
