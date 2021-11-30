@@ -52,53 +52,49 @@ def mult_array(bitAr, chip, fe):
     y = 0
     k = 0
     l = 0
-    tam = 0
-    print(chip)
     while x < len(bitAr):
-        #print("Mensagem: "+str(bitAr[x]))
         while y < fe:
-            if(tam == len(chip)):
-                tam = 0
-            #print(tam + y)
-            arraym[k] = bitAr[x] * chip[tam + y]
-            #print("Chip: "+str(chip[tam + y]))
-            #print("Sinal: "+str(arraym[k]))
+            arraym[l] = bitAr[x] * chip[k + y]
             y = y + 1
-            k = k + 1
-        tam = tam + fe
-        #print("-----------")
-        #print(tam)
-        #print(len(chip))
-        #print("-----------")
+            l = l + 1
+        k =k + y
         y = 0
         x = x + 1
     return arraym
 
+def chip_sizeM(chip,fe, lm):
+    chipfe = [0]*fe * lm
+    x = 0
+    y = 0
+    while x < len(chipfe):
+        if(y==len(chip)):
+            y = 0
+        chipfe[x] = chip[y]
+       # print(chip[y])
+        x = x + 1
+        y = y + 1
+
+    # print(len(chipfe))
+    # print(chipfe)
+    return chipfe
+
 if __name__ == "__main__":
-    bitArray = pseudo_generator_message(1000000) 
+    bitArray = pseudo_generator_message(1000) 
     bitArraymenos1 = bitArray
     fe = int(sys.argv[1])                                                      # Frequência de amostragem
     bitArraymenos1 = fun_menos1(bitArraymenos1)                             # Transformar os zeros em menos 1
     fa = int(sys.argv[2]) 
-    psd_array = pseudo_generator_message(random.randint(1,10))                # Gerar o pseudo noise
+    psd_array = pseudo_generator_message(20)                # Gerar o pseudo noise
     #print(psd_array)
-    psd_array_fa = fun_fs(psd_array,fa)                        # Multiplicar o pseudo pela Fs4
-    #print(psd_array)
-    #print(psd_array_fa)
+    psd_array_fa = fun_fs(psd_array,fa)     
+    #print(psd_array_fa)                                  # Multiplicar o pseudo pela Fs4
+    psd_array_fa_tamanho = chip_sizeM(psd_array_fa, fe, len(bitArray))
     psd_array_save_file = fun_fs(psd_array,fa)
     #print(psd_array_save_file)
-    psd_array_fa = fun_menos1(psd_array_fa)
+    psd_array_fa = fun_menos1(psd_array_fa_tamanho)
     toOpen = sys.argv[3]
 
-    #print(len(bitArray))    
-    #print(len(psd_array))     
-    #print(len(psd_array_fa)) 
-
     cdma = mult_array(bitArraymenos1, psd_array_fa, fe)
-    
-    #print(bitArray)
-    #print(psd_array_fa)
-    #print(len(cdma))
 
     bitArrayFile = retirar_menos1(bitArraymenos1)
     #print(cdma)

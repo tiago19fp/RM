@@ -89,31 +89,41 @@ if __name__ == "__main__":
         #print(multChip)
         x += 1
 
-    array = multChip[0]
+    array = multChip[1]
     finalArray = []
     count = 0
     fim = len(array)
     for n in array:
         if(count == fim):
             break
-        soma = float(array[count]) + float(array[count + 1]) + float(array[count + 2])+float(array[count+3]) + float(array[count + 4]) + float(array[count + 5])+float(array[count+6]) + float(array[count + 7]) + float(array[count + 8])+float(array[count+9]) + float(array[count + 10]) + float(array[count + 11])+float(array[count+12]) + float(array[count + 13]) + float(array[count + 14])+float(array[count+15])
+        soma = float(array[count]) + float(array[count + 1]) + float(array[count + 2])
 
         if(soma > 0):
             finalArray.append(1)
         else:
             finalArray.append(0)
-        count += 16
+        count += 3
         soma = 0
 
     t = 0
+    erros1 = 0
     erros = 0
     mess = message[0]
+    mess2 = message[1]
 
     while t < len(finalArray):
         #print(str(finalArray[t])+"|"+str(mess[t]))
         if(str(finalArray[t])!=str(mess[t])):
-            erros += 1
+            erros1 += 1
         t = t + 1
+
+    print(erros1)
+    r = 0
+    while r < len(finalArray):
+        #print(str(finalArray[t])+"|"+str(mess[t]))
+        if(str(finalArray[r])!=str(mess2[r])):
+            erros += 1
+        r = r + 1
 
     print(erros)
     

@@ -75,11 +75,11 @@ if __name__ == "__main__":
             while x < len(cdma):
                 sinaisSomados[x] = sinalAtenuado[x] + sinaisSomados[x]
                 x += 1
-            print(sinalAtenuado)
+            #print(sinalAtenuado)
         nFile += 1
     noise = np.random.normal(0, desvio, len(cdma))
     #print(sinalAtenuado)
-    finalSignal = sinaisSomados + noise
+    finalSignal = sinaisSomados #+ noise
     x = 1
     for listitem in finalSignal:
         if(len(finalSignal) == x):
