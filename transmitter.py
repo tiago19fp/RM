@@ -79,21 +79,24 @@ def chip_sizeM(chip,fe, lm):
     return chipfe
 
 if __name__ == "__main__":
-    bitArray = pseudo_generator_message(1000) 
+    bitArray = pseudo_generator_message(1000)
+    #bitArray = [0,1,1,0,0,1,1,1,0,0]
     bitArraymenos1 = bitArray
     fe = int(sys.argv[1])                                                      # Frequência de amostragem
     bitArraymenos1 = fun_menos1(bitArraymenos1)                             # Transformar os zeros em menos 1
     fa = int(sys.argv[2]) 
     psd_array = pseudo_generator_message(20)                # Gerar o pseudo noise
+    #psd_array = [1,1,1,0,0]
     #print(psd_array)
-    psd_array_fa = fun_fs(psd_array,fa)     
-    #print(psd_array_fa)                                  # Multiplicar o pseudo pela Fs4
+    psd_array_fa = fun_fs(psd_array,fa)   
+    psd_array_fa = fun_menos1(psd_array_fa)  
+    print(psd_array_fa)                                  # Multiplicar o pseudo pela Fs4
     psd_array_fa_tamanho = chip_sizeM(psd_array_fa, fe, len(bitArray))
     psd_array_save_file = fun_fs(psd_array,fa)
     #print(psd_array_save_file)
     psd_array_fa = fun_menos1(psd_array_fa_tamanho)
     toOpen = sys.argv[3]
-
+    print(len(psd_array_fa))
     cdma = mult_array(bitArraymenos1, psd_array_fa, fe)
 
     bitArrayFile = retirar_menos1(bitArraymenos1)

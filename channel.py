@@ -52,7 +52,7 @@ if __name__ == "__main__":
             if(counter % 5 == 3):   # 3rd line
                 output = line.strip()
             if(counter % 5 == 4):   # 4th line
-                desvio = int(line.strip())
+                desvio = float(line.strip())
             if(counter % 5 == 0):   # 4th line
                 size = int(line.strip())
 
@@ -65,7 +65,7 @@ if __name__ == "__main__":
         with open(ficheiros[nFile], "r") as filestream:                     # OPEN FILES FROM CONFIG FILE
             cdma,message,chip,fe = getAttributes(filestream)
             sinalAtenuado = [0] * len(cdma)
-            print(len(cdma))
+            #print(len(cdma))
             counter = 0
             for x in cdma:
                 sinalAtenuado[counter] = float(f_atenuacao[nFile]) * float(cdma[counter])
@@ -75,11 +75,13 @@ if __name__ == "__main__":
             while x < len(cdma):
                 sinaisSomados[x] = sinalAtenuado[x] + sinaisSomados[x]
                 x += 1
-            #print(sinalAtenuado)
+            print(sinalAtenuado)
         nFile += 1
     noise = np.random.normal(0, desvio, len(cdma))
     #print(sinalAtenuado)
-    finalSignal = sinaisSomados #+ noise
+    print(sinaisSomados)
+    finalSignal = sinaisSomados + noise
+    print(finalSignal)
     x = 1
     for listitem in finalSignal:
         if(len(finalSignal) == x):

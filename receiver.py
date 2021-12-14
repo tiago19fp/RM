@@ -3,6 +3,9 @@ from typing import Counter, final
 import numpy as np
 import pylab as plt
 
+from scipy.stats import spearmanr
+
+
 def fun_menos1(array):
     x = 0
     while x < len(array):
@@ -77,8 +80,8 @@ if __name__ == "__main__":
                 if(count % 3 == 1):   # 7th/10th/... line  (fe)
                     fe.append(int(lines[count-1].strip()))
 
-    soma = 0
 
+    soma = 0
     x = 0
     multChip = []
     while(x < len(chip)):
@@ -86,44 +89,57 @@ if __name__ == "__main__":
         integer_list = list(integer_map)
         chipMinus1 = fun_menos1(integer_list)
         multChip.append(mult_array(sinal,chipMinus1))
-        #print(multChip)
         x += 1
+    q = 0
+    array_media = []
+    while q < len(message):
+        array = multChip[q]
+        #print(array)
+        finalArray = []
+        count = 0
+        fim = len(array)
+        f = 0
+        while f < len(array):
+            t = 0
+            while t < fe[0]:
+                soma = float(soma) + float(array[f+t])
+                t = t + 1
+            if(soma > 0):
+                finalArray.append(1)
+            else:
+                finalArray.append(0)
+            soma = 0
+            f = f + fe[0]
 
-    array = multChip[1]
-    finalArray = []
-    count = 0
-    fim = len(array)
-    for n in array:
-        if(count == fim):
-            break
-        soma = float(array[count]) + float(array[count + 1]) + float(array[count + 2])
+        
+        erros = 0
+        mess = message[q]
+        r = 0
+        while r < len(finalArray):
+            #print(str(finalArray[r])+"|"+str(mess[r]))
+            if(str(finalArray[r])!=str(mess[r])):
+                erros += 1
+            r = r + 1
 
-        if(soma > 0):
-            finalArray.append(1)
-        else:
-            finalArray.append(0)
-        count += 3
-        soma = 0
-
-    t = 0
-    erros1 = 0
-    erros = 0
-    mess = message[0]
-    mess2 = message[1]
-
-    while t < len(finalArray):
-        #print(str(finalArray[t])+"|"+str(mess[t]))
-        if(str(finalArray[t])!=str(mess[t])):
-            erros1 += 1
-        t = t + 1
-
-    print(erros1)
-    r = 0
-    while r < len(finalArray):
-        #print(str(finalArray[t])+"|"+str(mess[t]))
-        if(str(finalArray[r])!=str(mess2[r])):
-            erros += 1
-        r = r + 1
-
-    print(erros)
-    
+        print("----Msg "+str(q+1)+" ----")
+        print("Erros:"+str(erros))
+        print("BER:"+str(erros/1000))
+        array_media.append((erros/1000))
+        #x  = 0
+        #array_spe = []
+        #while x <1000:
+        #finalArray = finalArray[-x:] + finalArray[:-x]
+        coef, p = spearmanr(mess, finalArray)
+        print('Spearmans correlation coefficient: %.3f' % coef)
+        #array_spe.append(coef)
+        # interpret the significance
+        #alpha = 0.05
+        #if p > alpha:
+            #print('Samples are uncorrelated (fail to reject H0) p=%.3f' % p)
+        #else:
+            #print('Samples are correlated (reject H0) p=%.3f' % p)
+        q = q + 1
+        #x = x + 1
+        print('-------------')
+            
+    print("Mean:"+str(np.mean(array_media)))
