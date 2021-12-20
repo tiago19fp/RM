@@ -1,50 +1,48 @@
-import numpy as np
-import pylab as plt
-import bitarray
 import random
 import sys
+from scipy.linalg import hadamard
+
 
 def text_to_bits(text):
     bits = bin(int.from_bytes(text.encode(), 'big'))[2:]
     return list(map(int, bits.zfill(8 * ((len(bits) + 7) // 8))))
 
-def fun_fs(array, fs):
-    bitArrayFs = [0]*fs*len(array)
-    y = 0
-    k = 0
-    c = 0
-    while y < len(bitArrayFs):
-        while k < fs:
-            bitArrayFs[y+k] = array[c]
-            k = k+1
-        y = y + fs
-        k = 0
-        c = c + 1
-    return bitArrayFs
 
 def fun_menos1(array):
     x = 0
     while x < len(array):
         if(array[x] == 0):
             array[x] = -1
-        x = x +1
+        x = x + 1
     return array
+
+
+def fun_zeros(array):
+    x = 0
+    while x < len(array):
+        if(array[x] == -1):
+            array[x] = 0
+        x = x + 1
+    return array
+
 
 def retirar_menos1(array):
     x = 0
     while x < len(array):
         if(array[x] == -1):
             array[x] = 0
-        x = x +1
+        x = x + 1
     return array
 
+
 def pseudo_generator_message(lenArray):
-   array = [0]*lenArray
-   x = 0
-   while x < lenArray: 
-       array[x]=random.randint(0, 1) 
-       x = x + 1
-   return array
+    array = [0]*lenArray
+    x = 0
+    while x < lenArray:
+        array[x] = random.randint(0, 1)
+        x = x + 1
+    return array
+
 
 def mult_array(bitAr, chip, fe):
     arraym = [0]*len(bitAr)*fe
@@ -57,20 +55,21 @@ def mult_array(bitAr, chip, fe):
             arraym[l] = bitAr[x] * chip[k + y]
             y = y + 1
             l = l + 1
-        k =k + y
+        k = k + y
         y = 0
         x = x + 1
     return arraym
 
-def chip_sizeM(chip,fe, lm):
+
+def chip_sizeM(chip, fe, lm):
     chipfe = [0]*fe * lm
     x = 0
     y = 0
     while x < len(chipfe):
-        if(y==len(chip)):
+        if(y == len(chip)):
             y = 0
         chipfe[x] = chip[y]
-       # print(chip[y])
+        # print(chip[y])
         x = x + 1
         y = y + 1
 
@@ -78,64 +77,55 @@ def chip_sizeM(chip,fe, lm):
     # print(chipfe)
     return chipfe
 
+
+def walshCodes(fe, row):
+    H = hadamard(fe)
+    row_array = H[row]
+    print(row_array)
+    return row_array
+
+
 if __name__ == "__main__":
     bitArray = pseudo_generator_message(1000)
-    #bitArray = [0,1,1,0,0,1,1,1,0,0]
     bitArraymenos1 = bitArray
-    fe = int(sys.argv[1])                                                      # Frequência de amostragem
-    bitArraymenos1 = fun_menos1(bitArraymenos1)                             # Transformar os zeros em menos 1
-    fa = int(sys.argv[2]) 
-    psd_array = pseudo_generator_message(20)                # Gerar o pseudo noise
-    #psd_array = [1,1,1,0,0]
-    #print(psd_array)
-    psd_array_fa = fun_fs(psd_array,fa)   
-    psd_array_fa = fun_menos1(psd_array_fa)  
-    print(psd_array_fa)                                  # Multiplicar o pseudo pela Fs4
-    psd_array_fa_tamanho = chip_sizeM(psd_array_fa, fe, len(bitArray))
-    psd_array_save_file = fun_fs(psd_array,fa)
-    #print(psd_array_save_file)
-    psd_array_fa = fun_menos1(psd_array_fa_tamanho)
+    fe = int(sys.argv[1])
+    bitArraymenos1 = fun_menos1(bitArraymenos1)
+    row = int(sys.argv[2])
+    #chip = pseudo_generator_message(20)
+    chip = walshCodes(fe, row)
+    chip = fun_menos1(chip)
+    chip_tamanho = chip_sizeM(chip, fe, len(bitArray))
+    chip_save_file = fun_zeros(chip)
+    chip = fun_menos1(chip_tamanho)
     toOpen = sys.argv[3]
-    print(len(psd_array_fa))
-    cdma = mult_array(bitArraymenos1, psd_array_fa, fe)
+    cdma = mult_array(bitArraymenos1, chip, fe)
 
     bitArrayFile = retirar_menos1(bitArraymenos1)
-    #print(cdma)
+
     with open(toOpen, 'w') as filehandle:
         x = 1
         for listitem in cdma:
             if(len(cdma) == x):
-                filehandle.write('%s' % listitem) 
+                filehandle.write('%s' % listitem)
                 break
             filehandle.write('%s,' % listitem)
-            x = x + 1 
+            x = x + 1
         filehandle.write('\n')
-        x=1 
+        x = 1
         for listitem in bitArrayFile:
             if(len(bitArrayFile) == x):
-                filehandle.write('%s' % listitem) 
-                break
-            filehandle.write('%s,' % listitem) 
-            x = x + 1
-        filehandle.write('\n')
-        x=1
-        for listitem in psd_array_save_file:
-            if(len(psd_array_save_file) == x):
                 filehandle.write('%s' % listitem)
-                break 
+                break
             filehandle.write('%s,' % listitem)
             x = x + 1
         filehandle.write('\n')
-        x=1   
+        x = 1
+        for listitem in chip_save_file:
+            if(len(chip_save_file) == x):
+                filehandle.write('%s' % listitem)
+                break
+            filehandle.write('%s,' % listitem)
+            x = x + 1
+        filehandle.write('\n')
+        x = 1
         filehandle.write(str(fe))
-
-    graph_mens = np.array(bitArray)                             # Array de bits para gerar o gráfico mensagem sem Fs      
-    graph_pseudo = np.array(psd_array)                          # Array de bits para gerar o gráfico do pseudo noise
-    graph_pseudoFs = np.array(psd_array_fa)                     # Array de bits para gerar o gráfico do pseudo com Fs  
-
-    # plt.step(np.arange(0,len(graph_mens)),graph_mens)           # Plot do gráfico mensagem
-    # #plt.step(np.arange(0,len(graph_mensFs)),graph_mensFs)      # Plot do gráfico mensagem com Fs
-    # plt.step(np.arange(0,len(graph_pseudo)),graph_pseudo)       # Plot do gráfico pseudo 
-    # plt.step(np.arange(0,len(graph_pseudoFs)),graph_pseudoFs)   # Plot do gráfico pseudo com Fs
-    # plt.legend()
-    # plt.show()
