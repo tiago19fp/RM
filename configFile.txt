@@ -1,5 +1,5 @@
-firstSignal.txt,secondSignal.txt,thirdSignal.txt,fourthSignal.txt
-0.8,0.8,0.8,0.8
+firstSignal.txt,secondSignal.txt
+0.8,0.8
 channel.txt
-1
+0
 16000

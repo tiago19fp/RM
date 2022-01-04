@@ -1,12 +1,7 @@
 import random
 import sys
 from scipy.linalg import hadamard
-
-
-def text_to_bits(text):
-    bits = bin(int.from_bytes(text.encode(), 'big'))[2:]
-    return list(map(int, bits.zfill(8 * ((len(bits) + 7) // 8))))
-
+import numpy as np
 
 def fun_menos1(array):
     x = 0
@@ -91,9 +86,12 @@ if __name__ == "__main__":
     fe = int(sys.argv[1])
     bitArraymenos1 = fun_menos1(bitArraymenos1)
     row = int(sys.argv[2])
-    #chip = pseudo_generator_message(20)
+    #chip = pseudo_generator_message(16)
     chip = walshCodes(fe, row)
     chip = fun_menos1(chip)
+    chip_ficheiro = chip
+    #print(chip)
+    #print(chip)
     chip_tamanho = chip_sizeM(chip, fe, len(bitArray))
     chip_save_file = fun_zeros(chip)
     chip = fun_menos1(chip_tamanho)

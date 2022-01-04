@@ -38,6 +38,10 @@ def mult_array(arr, chip):
         x = x + 1
     return arraym
 
+def rotateChip(chip, posicao):
+    array = np.array(chip)
+    array_new = np.roll(array, posicao)
+    return array_new
 
 if __name__ == "__main__":
     channel = "channel.txt"
@@ -70,48 +74,56 @@ if __name__ == "__main__":
                 if(count % 3 == 1):   # 7th/10th/... line  (fe)
                     fe.append(int(lines[count-1].strip()))
 
-    soma = 0
-    x = 0
-    multChip = []
-    while(x < len(chip)):
-        integer_map = map(float, chip[x])
-        integer_list = list(integer_map)
-        chipMinus1 = fun_menos1(integer_list)
-        multChip.append(mult_array(sinal, chipMinus1))
-        x += 1
-    q = 0
-    array_media = []
-    while q < len(message):
-        array = multChip[q]
-        finalArray = []
-        count = 0
-        fim = len(array)
-        f = 0
-        while f < len(array):
-            t = 0
-            while t < fe[0]:
-                soma = float(soma) + float(array[f+t])
-                t = t + 1
-            if(soma > 0):
-                finalArray.append(1)
-            else:
-                finalArray.append(0)
-            soma = 0
-            f = f + fe[0]
+    posicao = 0
+    while posicao < 16:
+        soma = 0
+        x = 0
+        multChip = []
+        while(x < len(chip)):
+            integer_map = map(float, chip[x])
+            integer_list = list(integer_map)
+            chipMinus1 = fun_menos1(integer_list)
+            chip_rotate = rotateChip(chipMinus1,posicao)
+            multChip.append(mult_array(sinal, chip_rotate))
+            x += 1
+        q = 0
+        x = 0
+        array_media = []
+        while q < len(message):
+            array = multChip[q]
+            finalArray = []
+            count = 0
+            fim = len(array)
+            f = 0
+            while f < len(array):
+                t = 0
+                while t < fe[0]:
+                    soma = float(soma) + float(array[f+t])
+                    t = t + 1
+                if(soma > 0):
+                    finalArray.append(1)
+                else:
+                    finalArray.append(0)
+                soma = 0
+                f = f + fe[0]
 
-        erros = 0
-        mess = message[q]
-        r = 0
-        while r < len(finalArray):
-            if(str(finalArray[r]) != str(mess[r])):
-                erros += 1
-            r = r + 1
+            erros = 0
+            mess = message[q]
+            r = 0
+            while r < len(finalArray):
+                if(str(finalArray[r]) != str(mess[r])):
+                    erros += 1
+                r = r + 1
+        
+            print("---- Sinal "+str(q+1)+" ----")
+            print("chip atrasado:"+str(posicao))
+            print("Erros:"+str(erros))
+            print("BER:"+str(erros/1000))
+            array_media.append((erros/1000))
+            coef, p = spearmanr(mess, finalArray)
+            print('Spearmans correlation coefficient: %.3f' % coef)
+            q = q + 1
+            print('----------------------------------------')
 
-        print("---- Sinal "+str(q+1)+" ----")
-        print("Erros:"+str(erros))
-        print("BER:"+str(erros/1000))
-        array_media.append((erros/1000))
-        q = q + 1
-        print('-----------------')
-
+        posicao = posicao + 1
     print("BER mean:"+str(np.mean(array_media)))
