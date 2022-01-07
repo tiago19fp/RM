@@ -1,5 +1,6 @@
 import numpy as np
 from scipy.stats import spearmanr
+from scipy.stats.stats import SpearmanrResult
 
 
 def fun_menos1(array):
@@ -74,8 +75,8 @@ if __name__ == "__main__":
                 if(count % 3 == 1):   # 7th/10th/... line  (fe)
                     fe.append(int(lines[count-1].strip()))
 
-    posicao = 0
-    while posicao < 16:
+    #posicao = 0
+    #while posicao < 16:
         soma = 0
         x = 0
         multChip = []
@@ -83,8 +84,8 @@ if __name__ == "__main__":
             integer_map = map(float, chip[x])
             integer_list = list(integer_map)
             chipMinus1 = fun_menos1(integer_list)
-            chip_rotate = rotateChip(chipMinus1,posicao)
-            multChip.append(mult_array(sinal, chip_rotate))
+            #chip_rotate = rotateChip(chipMinus1,posicao)
+            multChip.append(mult_array(sinal, chipMinus1))
             x += 1
         q = 0
         x = 0
@@ -116,14 +117,14 @@ if __name__ == "__main__":
                 r = r + 1
         
             print("---- Sinal "+str(q+1)+" ----")
-            print("chip atrasado:"+str(posicao))
+            #print("chip atrasado:"+str(posicao))
             print("Erros:"+str(erros))
             print("BER:"+str(erros/1000))
             array_media.append((erros/1000))
-            coef, p = spearmanr(mess, finalArray)
-            print('Spearmans correlation coefficient: %.3f' % coef)
+            #coef, p = spearmanr(mess, finalArray)
+            #print('Spearman Coefficient:%.3f' % coef)
             q = q + 1
-            print('----------------------------------------')
+        print('-----------------')
 
-        posicao = posicao + 1
+        #posicao = posicao + 1
     print("BER mean:"+str(np.mean(array_media)))

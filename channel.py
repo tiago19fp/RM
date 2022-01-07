@@ -1,11 +1,5 @@
 import numpy as np
 
-
-def text_to_bits(text):
-    bits = bin(int.from_bytes(text.encode(), 'big'))[2:]
-    return list(map(int, bits.zfill(8 * ((len(bits) + 7) // 8))))
-
-
 def fun_menos1(array):
     x = 0
     while x < len(array):

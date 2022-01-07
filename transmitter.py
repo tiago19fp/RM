@@ -64,19 +64,15 @@ def chip_sizeM(chip, fe, lm):
         if(y == len(chip)):
             y = 0
         chipfe[x] = chip[y]
-        # print(chip[y])
         x = x + 1
         y = y + 1
-
-    # print(len(chipfe))
-    # print(chipfe)
     return chipfe
 
 
 def walshCodes(fe, row):
     H = hadamard(fe)
     row_array = H[row]
-    print(row_array)
+    #print(row_array)
     return row_array
 
 
@@ -86,12 +82,10 @@ if __name__ == "__main__":
     fe = int(sys.argv[1])
     bitArraymenos1 = fun_menos1(bitArraymenos1)
     row = int(sys.argv[2])
-    #chip = pseudo_generator_message(16)
+    #chip = pseudo_generator_message(20)
     chip = walshCodes(fe, row)
     chip = fun_menos1(chip)
     chip_ficheiro = chip
-    #print(chip)
-    #print(chip)
     chip_tamanho = chip_sizeM(chip, fe, len(bitArray))
     chip_save_file = fun_zeros(chip)
     chip = fun_menos1(chip_tamanho)
